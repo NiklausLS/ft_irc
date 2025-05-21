@@ -1,7 +1,7 @@
 NAME = ircserv
 CC = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
-SRCS = main.cpp parsing/check.cpp
+SRCS = src/main.cpp src/parsing/check.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
