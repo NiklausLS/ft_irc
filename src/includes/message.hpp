@@ -6,22 +6,22 @@
 
 class Message
 {
-private:
-    std::string _command;
-    std::vector<std::string> _params;
+    private:
+        std::string _command;
+        std::vector<std::string> _params;
     
-public:
-    Message();
-    ~Message();
-    Message(const Message& copy);
-    Message& operator=(const Message& copy);
+    public:
+        Message();
+        ~Message();
+        Message(const Message& copy);
+        Message& operator=(const Message& copy);
     
-    bool parseSimple(const std::string& input);
+        bool parseSimple(const std::string& input);
     
-    std::string getCommand() const;
-    int getParamCount() const;
-    
-    void display() const;
+        std::string getCommand() const;
+        int getParamCount() const;
+
+        void display() const;
 };
 
 #endif
