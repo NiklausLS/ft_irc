@@ -4,6 +4,9 @@
 #include "check.hpp"
 #include <string>
 #include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class Server
 {
@@ -19,7 +22,7 @@ class Server
         Server(const Server &copy);
         Server& operator=(const Server &copy);
 
-        void test();
+        void makeSocket();
 };
 
 #endif

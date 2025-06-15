@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     std::cout << "port = " << parsing.port << " | " << "password = " << parsing.password << std::endl;
 
     Server irc(parsing.port, parsing.password);
-    irc.test();
+    irc.makeSocket();
 
     return (0);
 }
