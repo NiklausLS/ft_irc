@@ -1,11 +1,14 @@
-#include "../includes/check.hpp"
-#include "../includes/message.hpp"
+#include "check.hpp"
+#include "message.hpp"
 #include <iostream>
 
 Message::Message()
 {
     _command = "";
 }
+
+Message::~Message()
+{}
 
 Message::Message(const Message& other)
 {
@@ -22,9 +25,6 @@ Message& Message::operator=(const Message& other)
     }
     return (*this);
 }
-
-Message::~Message()
-{}
 
 //PARSE COMMAND 
 bool Message::parseSimple(const std::string& input)
@@ -57,13 +57,13 @@ bool Message::parseSimple(const std::string& input)
     }
 }
 
-//RETURN COMMAND STRING
+//RETURN COMMAND STR
 std::string Message::getCommand() const
 {
     return _command;
 }
 
-//RETURN NUMBER OF PARAMETERS
+//RETURN PARAM NBR
 int Message::getParamCount() const
 {
     return _params.size();

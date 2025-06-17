@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "includes/check.hpp"
-#include "includes/server.hpp"
+#include "check.hpp"
+#include "server.hpp"
 
 //to do list
 //check args nbr
@@ -15,8 +15,9 @@ int main(int argc, char **argv)
     std::cout << "--- MAIN ---" << std::endl;
     std::cout << "port = " << parsing.port << " | " << "password = " << parsing.password << std::endl;
 
+
     Server irc(parsing.port, parsing.password);
-    irc.makeSocket();
+    irc.exec();
 
     return (0);
 }

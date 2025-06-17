@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <unistd.h>
+#include <unistd.h> 
 
 class Server
 {
@@ -23,6 +23,10 @@ class Server
         Server& operator=(const Server &copy);
 
         void makeSocket();
+        void exec();
+        void getClient();
+
+        void parseMessage(const std::string &input);
 };
 
 #endif

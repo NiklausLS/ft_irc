@@ -1,4 +1,4 @@
-#include "../includes/check.hpp"
+#include "check.hpp"
 
 //check args nbr
 //check le password

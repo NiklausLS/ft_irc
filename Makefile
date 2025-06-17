@@ -22,7 +22,7 @@ $(TEST_NAME): $(TEST_OBJS)
 	$(CC) $(CFLAGS) $(TEST_OBJS) -o $(TEST_NAME)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -I src/includes -c $< -o $@
+	$(CC) $(CFLAGS) -I includes -c $< -o $@
 
 clean:
 	rm -f $(OBJS) $(TEST_OBJS)

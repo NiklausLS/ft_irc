@@ -1,9 +1,10 @@
-#include "../includes/check.hpp"
-#include "../includes/server.hpp"
+#include "check.hpp"
+#include "server.hpp"
+#include "message.hpp"  
 
 //TO DO LIST
 //1 - lancer le serveur (OK)
-//2 - sockets (OK)
+//2 - sockets (OK ?)
 //3 - connexions (en cours)
 // ????
 
@@ -43,6 +44,17 @@ Server& Server::operator=(const Server &copy)
         _socket = -1;
     }
     return *this;
+}
+
+void Server::exec()
+{
+    std::cout << GREEN << "--- SERVER STARTING ---" << RESET << std::endl;
+
+    makeSocket();
+    getClient();
+
+    std::cout << "Password = " << _password << std::endl;
+    std::cout << GREEN << "--- SERVER OK ---" << RESET << std::endl;
 }
 
 void Server::makeSocket()
@@ -89,4 +101,55 @@ void Server::makeSocket()
     std::cout << "------------\n" << std::endl;
 
     std::cout << GREEN << "--- SERVER TEST END ---" << RESET << std::endl;
+}
+
+void Server::getClient()
+{
+    std::cout << BLUE << "--- WAITING FOR CLIENT ---" << RESET << std::endl;
+    
+    struct sockaddr_in clientAddr;
+    socklen_t clientLen = sizeof(clientAddr);
+    
+    int clientSocket = accept(_socket, (struct sockaddr*)&clientAddr, &clientLen);
+    if (clientSocket == -1)
+    {
+        std::cerr << RED << "ERROR: accept failed" << RESET << std::endl;
+        return;
+    }
+    
+    std::cout << GREEN << "client fd = " << clientSocket << RESET << std::endl;
+    
+    char buffer[512];
+    int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+    if (bytesReceived > 0)
+    {
+        buffer[bytesReceived] = '\0';
+        std::cout << PINK << "Received = " << buffer << RESET << std::endl;
+        
+        //PAS PARFAITE
+        parseMessage(std::string(buffer));
+
+        std::string response = "Echo = ";
+        response += buffer;
+        response += "\r\n";
+        send(clientSocket, response.c_str(), response.length(), 0);
+    }
+    else
+        std::cout << YELLOW << "Client sent no data" << RESET << std::endl;
+    close(clientSocket);
+    std::cout << YELLOW << "Client disconnected" << RESET << std::endl;
+}
+
+void Server::parseMessage(const std::string& input)
+{
+    std::cout << YELLOW << "--- PARSING MESSAGE ---" << RESET << std::endl;
+    
+    Message ircMessage;
+    if (ircMessage.parseSimple(input))
+    {
+        std::string command = ircMessage.getCommand();
+        std::cout << GREEN << "Parsed command = " << command << RESET << std::endl;
+    }
+    else
+        std::cout << RED << "ERROR: parsing message" << input << RESET << std::endl;
 }
