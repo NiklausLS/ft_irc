@@ -14,6 +14,7 @@ class Server
         int _port;
         std::string _password;
         int _socket;
+        std::vector<int> _clients;
 
     public:
         Server();
@@ -27,6 +28,8 @@ class Server
         void getClient();
 
         void parseMessage(const std::string &input);
+
+        void makeServer();
 };
 
 #endif
