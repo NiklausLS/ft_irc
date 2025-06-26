@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h> 
+#include "../includes/client.hpp"
 
 class Server
 {
@@ -14,7 +15,7 @@ class Server
         int _port;
         std::string _password;
         int _socket;
-        std::vector<int> _clients;
+        std::vector<Client*> _clients;
 
     public:
         Server();

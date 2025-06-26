@@ -3,7 +3,7 @@ TEST_NAME = run_tests
 CC = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
-SRCS = src/main.cpp src/parsing/check.cpp src/parsing/message.cpp src/connection/server.cpp
+SRCS = src/main.cpp src/parsing/check.cpp src/parsing/message.cpp src/connection/server.cpp src/connection/client.cpp
 
 TEST_SRCS = tests/test.cpp tests/testing.cpp src/parsing/check.cpp
 

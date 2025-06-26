@@ -5,7 +5,7 @@
 //check le port
 Data Check::checkAll(int argc, char **argv)
 {
-    std::cout << "--- START CHECKALL ---" << std::endl;
+    //std::cout << "--- START CHECKALL ---" << std::endl;
     if (argc != 3)
     {
         std::cerr << RED << "ERROR: wrong number of arguments" << RESET << std::endl;
@@ -13,9 +13,9 @@ Data Check::checkAll(int argc, char **argv)
     }
 
     std::string checkPort = argv[1];
-    std::cout << "Port = " << checkPort << std::endl;
+    //std::cout << "Port = " << checkPort << std::endl;
     std::string checkPassword = argv[2];
-    std::cout << "Password = " << checkPassword << std::endl;
+    //std::cout << "Password = " << checkPassword << std::endl;
 
     if (checkPassword.empty())
     {
@@ -31,7 +31,7 @@ Data Check::checkAll(int argc, char **argv)
 
     for (size_t i = 0; i < checkPort.length(); ++i)
     {
-        std::cout << checkPort << std::endl;
+        ///std::cout << checkPort << std::endl;
         if (!std::isdigit(checkPort[i]))
         {
             std::cerr << RED << "ERROR: port is not a digit" << RESET << std::endl;
