@@ -20,6 +20,9 @@ public:
     
     int getFd() const;
     void addData(const std::string& data);
+
+    bool checkEnd() const;
+    std::string getCommand();
 };
 
 #endif
