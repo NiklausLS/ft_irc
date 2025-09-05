@@ -26,7 +26,7 @@ Message& Message::operator=(const Message& other)
     return (*this);
 }
 
-//PARSE COMMAND 
+//PARSE COMMAND
 bool Message::deleteSpace(const std::string& input)
 {
     std::cout << "--- PARSING " << input << " ---" << std::endl;
@@ -37,41 +37,65 @@ bool Message::deleteSpace(const std::string& input)
         return (false);
     }
     
-    //CLEAR OLD DATA
     _command = "";
     _params.clear();
     
-    //JUST GET THE FIRST WORD AS COMMAND
-    size_t spacePos = input.find(' ');
-    if (spacePos != std::string::npos)
+    std::vector<std::string> tokens;
+    size_t pos = 0;
+    
+    while (pos < input.length())
     {
-        _command = input.substr(0, spacePos);
-        std::cout << GREEN << "COMMAND = " << _command << RESET << std::endl;
-        return (true);
+        while (pos < input.length() && input[pos] == ' ')
+            pos++;
+            
+        if (pos >= input.length())
+            break ;
+            
+        if (input[pos] == ':' && tokens.size() > 0)
+        {
+            std::string trailing = input.substr(pos + 1);
+            tokens.push_back(trailing);
+            break ;
+        }
+
+        size_t end = input.find(' ', pos);
+        if (end == std::string::npos)
+            end = input.length();
+            
+        tokens.push_back(input.substr(pos, end - pos));
+        pos = end;
     }
-    else
+    
+    if (tokens.empty())
+        return false;
+    
+    _command = tokens[0];
+    std::cout << GREEN << "COMMAND = " << _command << RESET << std::endl;
+    
+    for (size_t i = 1; i < tokens.size(); ++i)
     {
-        _command = input;
-        std::cout << GREEN << "COMMAND = " << _command << RESET << std::endl;
-        return (true);
+        _params.push_back(tokens[i]);
     }
+    
+    return (true);
 }
 
 //RETURN COMMAND STR
 std::string Message::getCommand() const
 {
-    return _command;
+    return (_command);
 }
 
 //RETURN PARAM NBR
 int Message::getParamCount() const
 {
-    return _params.size();
+    return (_params.size());
 }
 
-//DISPLAY MESSAGE INFO FOR DEBUG
-void Message::display() const
+void Message::printParam() const
 {
-    std::cout << BLUE << "COMMAND: " << _command << RESET << std::endl;
-    std::cout << BLUE << "PARAMS: " << _params.size() << RESET << std::endl;
+    for (size_t i = 0; i < _params.size(); ++i)
+    {
+        std::cout << "---- param " << (i + 1) << " = " << _params[i] << std::endl;
+    }
 }

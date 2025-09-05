@@ -107,6 +107,8 @@ void Server::parseMessage(const std::string& input)
     {
         std::string command = ircMessage.getCommand();
         std::cout << GREEN << "-- parsed command = " << command << RESET << std::endl;
+    
+        ircMessage.printParam();
     }
     else
         std::cout << RED << "-- ERROR: parsing message" << input << RESET << std::endl;

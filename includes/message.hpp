@@ -21,7 +21,7 @@ class Message
         std::string getCommand() const;
         int getParamCount() const;
 
-        void display() const;
+        void printParam() const;
 };
 
 #endif
