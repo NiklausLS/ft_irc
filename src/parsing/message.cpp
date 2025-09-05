@@ -27,9 +27,9 @@ Message& Message::operator=(const Message& other)
 }
 
 //PARSE COMMAND 
-bool Message::parseSimple(const std::string& input)
+bool Message::deleteSpace(const std::string& input)
 {
-    std::cout << "--- PARSING: " << input << " ---" << std::endl;
+    std::cout << "--- PARSING " << input << " ---" << std::endl;
     
     if (input.empty())
     {

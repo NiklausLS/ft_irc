@@ -26,7 +26,7 @@ class Server
 
         void makeSocket();
         void exec();
-        void getClient();
+        //void getClient();
 
         void parseMessage(const std::string &input);
 

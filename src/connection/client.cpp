@@ -1,24 +1,33 @@
-#include "../includes/client.hpp"
+#include "client.hpp"
 
-Client::Client() : _fd(-1)
+Client::Client() : _fd(-1), _authenticated(false), _registered(false)
 {
-    //std::cout << YELLOW << "CLIENT CONSTRUCTOR" << RESET << std::endl;
+    std::cout << YELLOW << "CLIENT: Default constructor" << RESET << std::endl;
 }
 
 Client::~Client()
 {
-    //std::cout << YELLOW << "CLIENT DESTRUCTOR FD = " << _fd << RESET << std::endl;
+    std::cout << YELLOW << "CLIENT: Destructor fd=" << _fd << RESET << std::endl;
+    if (_fd != -1)
+    {
+        close(_fd);
+        _fd = -1;
+    }
 }
 
-Client::Client(int fd) : _fd(fd)
+Client::Client(int fd) : _fd(fd), _authenticated(false), _registered(false)
 {
-    //std::cout << BLUE << "-- CLIENT CONSTRUCTOR FD = " << _fd << RESET << std::endl;
+    std::cout << BLUE << "CLIENT: Constructor fd=" << _fd << RESET << std::endl;
 }
 
 Client::Client(const Client& copy)
 {
     _fd = copy._fd;
     _inputBuffer = copy._inputBuffer;
+    _nickname = copy._nickname;
+    _username = copy._username;
+    _authenticated = copy._authenticated;
+    _registered = copy._registered;
 }
 
 Client& Client::operator=(const Client& copy)
@@ -27,53 +36,143 @@ Client& Client::operator=(const Client& copy)
     {
         _fd = copy._fd;
         _inputBuffer = copy._inputBuffer;
+        _nickname = copy._nickname;
+        _username = copy._username;
+        _authenticated = copy._authenticated;
+        _registered = copy._registered;
     }
-    return (*this);
+    return *this;
 }
 
 int Client::getFd() const
 {
-    return (_fd);
+    return _fd;
 }
 
+const std::string& Client::getNickname() const
+{
+    return _nickname;
+}
+
+const std::string& Client::getUsername() const
+{
+    return _username;
+}
+
+bool Client::isAuthenticated() const
+{
+    return _authenticated;
+}
+
+bool Client::isRegistered() const
+{
+    return _registered;
+}
+
+void Client::setNickname(const std::string& nick)
+{
+    _nickname = nick;
+    std::cout << GREEN << "CLIENT " << _fd << ": Nickname set to '" 
+              << _nickname << "'" << RESET << std::endl;
+}
+
+void Client::setUsername(const std::string& user)
+{
+    _username = user;
+    std::cout << GREEN << "CLIENT " << _fd << ": Username set to '" 
+              << _username << "'" << RESET << std::endl;
+}
+
+void Client::setAuthenticated(bool auth)
+{
+    _authenticated = auth;
+    std::cout << GREEN << "CLIENT " << _fd << ": Authentication=" 
+              << (_authenticated ? "true" : "false") << RESET << std::endl;
+}
+
+void Client::setRegistered(bool reg)
+{
+    _registered = reg;
+    std::cout << GREEN << "CLIENT " << _fd << ": Registration=" 
+              << (_registered ? "true" : "false") << RESET << std::endl;
+}
+
+// ✅ VOTRE MÉTHODE EXISTANTE - Gardée telle quelle
 void Client::addData(const std::string& data)
 {
     _inputBuffer += data;
-    std::cout << PINK << "buffer = " << _inputBuffer << RESET << std::endl;
+    std::cout << PINK << "CLIENT " << _fd << ": buffer = " << _inputBuffer << RESET << std::endl;
 }
 
-bool Client::checkEnd() const
+// ✅ NOUVELLE MÉTHODE: getMessage() - Extrait tous les messages complets
+std::vector<std::string> Client::getMessage()
 {
-    std::cout << "-- check if \\r\\n buffer" << std::endl;
+    std::vector<std::string> messages;
+    const std::string delimiter = "\r\n";
+    size_t pos = 0;
     
-    size_t check = _inputBuffer.find("\r\n");
-    if (check != std::string::npos)
+    std::cout << BLUE << "CLIENT " << _fd << ": Extracting messages from buffer" << RESET << std::endl;
+    
+    // Debug: afficher le buffer (en remplaçant \r\n pour lisibilité)
+    std::string debugBuffer = _inputBuffer;
+    for (size_t i = 0; i < debugBuffer.length(); ++i)
     {
-        std::cout << "-- checkEnd = OK" << std::endl;
-        return (true);
+        if (debugBuffer[i] == '\r')
+            debugBuffer.replace(i, 1, "\\r");
+        else if (debugBuffer[i] == '\n')
+            debugBuffer.replace(i, 1, "\\n");
     }
-    else
+    std::cout << BLUE << "CLIENT " << _fd << ": Current buffer: '" << debugBuffer << "'" << RESET << std::endl;
+    
+    // Extraire tous les messages complets
+    while ((pos = _inputBuffer.find(delimiter)) != std::string::npos)
     {
-        std::cout << "-- checkEnd = KO" << std::endl;
-        return (false);
+        std::string message = _inputBuffer.substr(0, pos);
+        
+        // Nettoyer le message (supprimer \r ou \n résiduels)
+        while (!message.empty() && (message.back() == '\r' || message.back() == '\n'))
+            message.pop_back();
+        while (!message.empty() && (message[0] == '\r' || message[0] == '\n'))
+            message.erase(0, 1);
+            
+        if (!message.empty())
+        {
+            messages.push_back(message);
+            std::cout << GREEN << "CLIENT " << _fd << "full message extracted = '" 
+                      << message << "'" << RESET << std::endl;
+        }
+        
+        // Supprimer le message traité du buffer
+        _inputBuffer.erase(0, pos + delimiter.length());
     }
+    
+    std::cout << BLUE << "CLIENT " << _fd << " OK " << messages.size() 
+              << " messages. NEXT = '" << _inputBuffer << "'" << RESET << std::endl;
+    
+    return (messages);
 }
 
-std::string Client::getCommand()
+bool Client::hasCompleteMessage() const
 {
-    std::cout << "- START GETCOMMAND" << std::endl;
-    
-    size_t pos = _inputBuffer.find("\r\n");
-    if (pos == std::string::npos)
-    {
-        std::cout << "-- no \\r\\n found" << std::endl;
-        return ("");
-    }
+    return (_inputBuffer.find("\r\n") != std::string::npos);
+}
 
-    std::string message = _inputBuffer.substr(0, pos);
-    _inputBuffer = _inputBuffer.substr(pos + 2);
+void Client::clearBuffer()
+{
+    _inputBuffer.clear();
+    std::cout << YELLOW << "CLIENT " << _fd << "| buffer cleared" << RESET << std::endl;
+}
+
+std::string Client::getPrefix() const
+{
+    if (_nickname.empty())
+        return "";
     
-    std::cout << "-- extracting " << message << std::endl;
-    std::cout << "--- rest of buffer = " << _inputBuffer << std::endl;
-    return (message);
+    std::string prefix = _nickname;
+    if (!_username.empty())
+    {
+        prefix += "!" + _username;
+        prefix += "@localhost";
+    }
+    return prefix;
 }

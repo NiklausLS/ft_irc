@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 const std::string RED = "\033[31m";
 const std::string GREEN = "\033[32m";

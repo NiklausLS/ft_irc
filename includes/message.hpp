@@ -16,7 +16,7 @@ class Message
         Message(const Message& copy);
         Message& operator=(const Message& copy);
     
-        bool parseSimple(const std::string& input);
+        bool deleteSpace(const std::string& input);
     
         std::string getCommand() const;
         int getParamCount() const;
