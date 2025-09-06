@@ -31,6 +31,7 @@ class Server
         void parseMessage(const std::string &input);
 
         void makeServer();
+        void closePort();
 };
 
 #endif

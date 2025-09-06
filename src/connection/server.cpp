@@ -69,6 +69,7 @@ void Server::makeSocket()
     }
     std::cout << GREEN << "--- Socket OK fd = " << _socket << RESET << std::endl;
 
+    closePort();
     //BIND SECTION
     //std::cout << BLUE << "- BIND START" << RESET << std::endl;
     struct sockaddr_in serverAddr;
@@ -251,4 +252,17 @@ void Server::makeServer()
         std::cout << GREEN << "- LOOP ITERATION OK" << RESET << std::endl;
         std::cout << "********************" << std::endl;
    }
+}
+
+//FIX PORT ERROR
+void Server::closePort()
+{
+    int opt = 1;
+
+    //std::cout << YELLOW << "- CLOSE PORT" << std::endl;
+
+    if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+        std::cerr << RED << "ERROR: closePort failed" << RESET << std::endl;
+    //else
+    //    std::cout << GREEN << "--- Port reuse OK" << RESET << std::endl;
 }
