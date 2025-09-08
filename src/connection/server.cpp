@@ -5,10 +5,11 @@
 
 //TO DO LIST
 //1 - lancer le serveur (OK)
-//2 - sockets (OK ?)
-//3 - connexions (en cours)
-// LISTEN BIND SELECT
-// ????
+//2 - sockets (OK)
+//3 - connexions (OK)
+//4 LISTEN (OK)
+//BIND (OK)
+//SELECT (OK)
 
 Server::Server() : _port(0), _password(""), _socket(-1)
 {

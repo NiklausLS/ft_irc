@@ -41,79 +41,76 @@ Client& Client::operator=(const Client& copy)
         _authenticated = copy._authenticated;
         _registered = copy._registered;
     }
-    return *this;
+    return (*this);
 }
 
 int Client::getFd() const
 {
-    return _fd;
+    return (_fd);
 }
 
 const std::string& Client::getNickname() const
 {
-    return _nickname;
+    return (_nickname);
 }
 
 const std::string& Client::getUsername() const
 {
-    return _username;
+    return (_username);
 }
 
 bool Client::isAuthenticated() const
 {
-    return _authenticated;
+    return (_authenticated);
 }
 
 bool Client::isRegistered() const
 {
-    return _registered;
+    return (_registered);
 }
 
 void Client::setNickname(const std::string& nick)
 {
     _nickname = nick;
-    std::cout << GREEN << "CLIENT " << _fd << ": Nickname set to '" 
+    std::cout << GREEN << "CLIENT " << _fd << " nickname = '" 
               << _nickname << "'" << RESET << std::endl;
 }
 
 void Client::setUsername(const std::string& user)
 {
     _username = user;
-    std::cout << GREEN << "CLIENT " << _fd << ": Username set to '" 
+    std::cout << GREEN << "CLIENT " << _fd << " username = '" 
               << _username << "'" << RESET << std::endl;
 }
 
 void Client::setAuthenticated(bool auth)
 {
     _authenticated = auth;
-    std::cout << GREEN << "CLIENT " << _fd << ": Authentication=" 
+    std::cout << GREEN << "CLIENT " << _fd << " authentification = " 
               << (_authenticated ? "true" : "false") << RESET << std::endl;
 }
 
 void Client::setRegistered(bool reg)
 {
     _registered = reg;
-    std::cout << GREEN << "CLIENT " << _fd << ": Registration=" 
+    std::cout << GREEN << "CLIENT " << _fd << " registred =" 
               << (_registered ? "true" : "false") << RESET << std::endl;
 }
 
-// ✅ VOTRE MÉTHODE EXISTANTE - Gardée telle quelle
 void Client::addData(const std::string& data)
 {
     _inputBuffer += data;
-    std::cout << PINK << "CLIENT " << _fd << ": buffer = " << _inputBuffer << RESET << std::endl;
+    std::cout << PINK << "CLIENT " << _fd << " buffer = " << _inputBuffer << RESET << std::endl;
 }
 
-// ✅ NOUVELLE MÉTHODE: getMessage() - Extrait tous les messages complets
 std::vector<std::string> Client::getMessage()
 {
     std::vector<std::string> messages;
     const std::string delimiter = "\r\n";
     size_t pos = 0;
     
-    std::cout << BLUE << "CLIENT " << _fd << ": Extracting messages from buffer" << RESET << std::endl;
+    std::cout << BLUE << "CLIENT " << _fd << " buffer message = " << RESET << std::endl;
     
-    // Debug: afficher le buffer (en remplaçant \r\n pour lisibilité)
     std::string debugBuffer = _inputBuffer;
     for (size_t i = 0; i < debugBuffer.length(); ++i)
     {
@@ -122,14 +119,12 @@ std::vector<std::string> Client::getMessage()
         else if (debugBuffer[i] == '\n')
             debugBuffer.replace(i, 1, "\\n");
     }
-    std::cout << BLUE << "CLIENT " << _fd << ": Current buffer: '" << debugBuffer << "'" << RESET << std::endl;
+    std::cout << BLUE << "CLIENT " << _fd << " current buffer = '" << debugBuffer << "'" << RESET << std::endl;
     
-    // Extraire tous les messages complets
     while ((pos = _inputBuffer.find(delimiter)) != std::string::npos)
     {
         std::string message = _inputBuffer.substr(0, pos);
         
-        // Nettoyer le message (supprimer \r ou \n résiduels)
         while (!message.empty() && (message.back() == '\r' || message.back() == '\n'))
             message.pop_back();
         while (!message.empty() && (message[0] == '\r' || message[0] == '\n'))
@@ -142,7 +137,6 @@ std::vector<std::string> Client::getMessage()
                       << message << "'" << RESET << std::endl;
         }
         
-        // Supprimer le message traité du buffer
         _inputBuffer.erase(0, pos + delimiter.length());
     }
     
@@ -166,7 +160,7 @@ void Client::clearBuffer()
 std::string Client::getPrefix() const
 {
     if (_nickname.empty())
-        return "";
+        return ("");
     
     std::string prefix = _nickname;
     if (!_username.empty())
@@ -174,5 +168,5 @@ std::string Client::getPrefix() const
         prefix += "!" + _username;
         prefix += "@localhost";
     }
-    return prefix;
+    return (prefix);
 }

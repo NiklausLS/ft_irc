@@ -67,7 +67,7 @@ bool Message::deleteSpace(const std::string& input)
     }
     
     if (tokens.empty())
-        return false;
+        return (false);
     
     _command = tokens[0];
     std::cout << GREEN << "COMMAND = " << _command << RESET << std::endl;

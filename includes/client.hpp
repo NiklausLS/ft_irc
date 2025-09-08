@@ -24,27 +24,22 @@ public:
     Client(const Client& copy);
     Client& operator=(const Client& copy);
     
-    // Getters
     int getFd() const;
     const std::string& getNickname() const;
     const std::string& getUsername() const;
     bool isAuthenticated() const;
     bool isRegistered() const;
     
-    // Setters
     void setNickname(const std::string& nick);
     void setUsername(const std::string& user);
     void setAuthenticated(bool auth);
     void setRegistered(bool reg);
     
-    // Gestion des messages - NOUVELLES MÉTHODES
-    void addData(const std::string& data);           // ✅ Vous aviez déjà
-    std::vector<std::string> getMessage();           // ✅ NOUVEAU - messages complets
-    bool hasCompleteMessage() const;                 // ✅ NOUVEAU - utilitaire
-    
-    // Utilitaires
+    void addData(const std::string& data);
+    std::vector<std::string> getMessage();
+    bool hasCompleteMessage() const;
     void clearBuffer();
-    std::string getPrefix() const; // nick!user@host pour IRC
+    std::string getPrefix() const;
 };
 
 #endif
