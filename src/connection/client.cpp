@@ -124,22 +124,16 @@ std::vector<std::string> Client::getMessage()
     while ((pos = _inputBuffer.find(delimiter)) != std::string::npos)
     {
         std::string message = _inputBuffer.substr(0, pos);
-        
-        while (!message.empty() && (message.back() == '\r' || message.back() == '\n'))
-            message.pop_back();
-        while (!message.empty() && (message[0] == '\r' || message[0] == '\n'))
-            message.erase(0, 1);
+
+        if (!message.empty() && message[message.length() - 1] == '\r')
+            message.erase(message.length() - 1);
             
         if (!message.empty())
-        {
             messages.push_back(message);
-            std::cout << GREEN << "CLIENT " << _fd << "full message extracted = '" 
-                      << message << "'" << RESET << std::endl;
-        }
         
-        _inputBuffer.erase(0, pos + delimiter.length());
+        _inputBuffer.erase(0, pos + 1);
     }
-    
+
     std::cout << BLUE << "CLIENT " << _fd << " OK " << messages.size() 
               << " messages. NEXT = '" << _inputBuffer << "'" << RESET << std::endl;
     
